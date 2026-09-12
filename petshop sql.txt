@@ -1,0 +1,85 @@
+DROP DATABASE IF EXISTS petshop_db;
+
+CREATE DATABASE petshop_db;
+
+USE petshop_db;
+
+CREATE TABLE funcionario (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    apellido VARCHAR(50),
+    cedula VARCHAR(20),
+    telefono VARCHAR(20),
+    legajo VARCHAR(20),
+    rol VARCHAR(20),
+    usuario VARCHAR(30),
+    contrasena VARCHAR(50)
+);
+
+CREATE TABLE cliente (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    apellido VARCHAR(50),
+    cedula VARCHAR(20),
+    telefono VARCHAR(20)
+);
+
+CREATE TABLE mascota (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50),
+    especie VARCHAR(30),
+    raza VARCHAR(30),
+    id_cliente INT,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id)
+);
+
+CREATE TABLE turno (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_mascota INT,
+    tipo_servicio VARCHAR(20),
+    fecha DATE,
+    hora TIME,
+    estado VARCHAR(20),
+    id_banador INT,
+    FOREIGN KEY (id_mascota) REFERENCES mascota(id),
+    FOREIGN KEY (id_banador) REFERENCES funcionario(id)
+);
+
+CREATE TABLE consulta (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    id_cliente INT,
+    id_funcionario INT,
+    descripcion VARCHAR(255),
+    fecha DATE,
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id),
+    FOREIGN KEY (id_funcionario) REFERENCES funcionario(id)
+);
+
+INSERT INTO funcionario
+(nombre, apellido, cedula, telefono, legajo, rol, usuario, contrasena)
+VALUES
+('Ana', 'Perez', '1111111-1', '099111111', 'F001', 'administrador', 'ana', '1234'),
+('Luis', 'Gomez', '2222222-2', '099222222', 'F002', 'funcionario comun', 'luis', '1234'),
+('Marta', 'Diaz', '3333333-3', '099333333', 'F003', 'banador', 'marta', '1234');
+
+INSERT INTO cliente
+(nombre, apellido, cedula, telefono)
+VALUES
+('Carla', 'Fernandez', '4444444-4', '099444444');
+
+INSERT INTO mascota
+(nombre, especie, raza, id_cliente)
+VALUES
+('Firulais', 'Perro', 'Labrador', 1),
+('Michi', 'Gato', 'Siames', 1);
+
+INSERT INTO consulta
+(id_cliente, id_funcionario, descripcion, fecha)
+VALUES
+(1, 2, 'Cuanto sale el corte y bano para un labrador', CURDATE());
+
+INSERT INTO turno
+(id_mascota, tipo_servicio, fecha, hora, estado, id_banador)
+VALUES
+(1, 'corte y bano', CURDATE() + 1, '09:00:00', 'pendiente', 3),
+(2, 'corte de pelo', CURDATE() + 1, '10:00:00', 'pendiente', NULL);
